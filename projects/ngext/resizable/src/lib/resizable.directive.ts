@@ -1,6 +1,6 @@
 import {Directive, ElementRef, Input, NgZone, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {fromEvent, merge, Subject} from "rxjs";
-import {repeatWhen, switchMapTo, takeUntil} from "rxjs/operators";
+import {from, fromEvent, merge, never, Subject} from "rxjs";
+import {map, repeatWhen, switchMap, switchMapTo, takeUntil} from "rxjs/operators";
 import {ResizableConfig, ResizeHandler} from "./resizable-config";
 import {ResizeDirection} from "./resizable-directions";
 import * as _ from 'lodash';
@@ -58,10 +58,10 @@ export class ResizableDirective implements OnInit, OnDestroy {
       merge(mouseDown$, ...this.handlers).pipe(switchMapTo(mouseMove$.pipe(takeUntil(mouseUp$))))
         .subscribe((evt: MouseEvent) => {
           evt.preventDefault();
-          const width = parseInt(this.elementRef.nativeElement.offsetWidth);
+          const width = parseInt(this.elementRef.nativeElement.clientWidth);
           const left = parseInt(this.elementRef.nativeElement.offsetLeft);
           const top = parseInt(this.elementRef.nativeElement.offsetTop);
-          const height = parseInt(this.elementRef.nativeElement.offsetHeight);
+          const height = parseInt(this.elementRef.nativeElement.clientHeight);
           if (this.direction & RESIZE_DIRECTIONS.RIGHT) {
             const newWidth = evt.clientX - window.scrollX - left;
             if (newWidth >= _.get(this._config, 'minSize.width', 0)) {
@@ -75,17 +75,19 @@ export class ResizableDirective implements OnInit, OnDestroy {
             }
           }
           if (this.direction & RESIZE_DIRECTIONS.LEFT) {
-            const newWidth = width + window.scrollX + left - evt.clientX;
+            const right = left + width;
+            const newWidth = right - evt.clientX - window.scrollX;
             if (newWidth >= _.get(this._config, 'minSize.width', 0)) {
-              this.renderer.setStyle(this.elementRef.nativeElement, 'left', evt.clientX + 'px');
               this.renderer.setStyle(this.elementRef.nativeElement, 'width', newWidth + 'px');
+              this.renderer.setStyle(this.elementRef.nativeElement, 'left', evt.clientX + window.scrollX + 'px');
             }
           }
           if (this.direction & RESIZE_DIRECTIONS.UP) {
-            let newHeight = height + window.scrollY + top - evt.clientY;
+            const bottom = top + height;
+            let newHeight = bottom - evt.clientY - window.scrollY;
             if (newHeight >= _.get(this._config, 'minSize.height', 0)) {
-              this.renderer.setStyle(this.elementRef.nativeElement, 'top', evt.clientY + 'px');
               this.renderer.setStyle(this.elementRef.nativeElement, 'height', newHeight + 'px');
+              this.renderer.setStyle(this.elementRef.nativeElement, 'top', evt.clientY + window.scrollY + 'px');
             }
           }
         });
