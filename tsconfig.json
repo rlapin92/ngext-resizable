@@ -18,6 +18,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@ngext/resizable": [
+        "dist/ngext/resizable"
+      ],
+      "@ngext/resizable/*": [
+        "dist/ngext/resizable/*"
+      ]
+    }
   }
 }

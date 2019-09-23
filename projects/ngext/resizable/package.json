@@ -1,0 +1,17 @@
+{
+  "name": "@ngext/resizable",
+  "version": "0.0.1",
+  "author": {
+    "email": "stioneq@gmail.com",
+    "name": "Roman Lapin"
+  },
+  "repository": {
+    "url": "https://github.com/Stioneq/ngext-resizable"
+  },
+  "description": "Directives that makes your component be resizable",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0",
+    "lodash": "^4.0.0"
+  }
+}

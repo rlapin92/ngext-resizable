@@ -1,0 +1,17 @@
+.dialog{
+  position: absolute;
+  width: 500px;
+  left: 50px;
+  top: 300px;
+  border: 5px solid #999;
+  height: 500px;
+}
+.test{
+  position: absolute;
+  right:20px;
+  width:10px;
+  background: green;
+  top:0;
+  height: 100%;
+
+}
